@@ -396,54 +396,53 @@ presets:
 
 custom:
   name: "自定义"
-  description: "完全自由定义时间段、日计划和周映射。"
+  description: "早上6点、中午12点、晚上7点各推送一次"
 
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # 默认配置
-  #
-  # 当前时刻不在任何时间段（积木块）内时，使用这组开关。
-  # 时间段中没有写的字段，也会回退到这里。
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   default:
-    collect: true                  # 是否采集数据（爬取热榜 + RSS）
-    analyze: false                 # 是否执行 AI 分析
-    ai_mode: "current"            # AI 分析模式:
-                                   #   follow_report → 跟随 report_mode
-                                   #   daily         → 强制全天汇总
-                                   #   current       → 强制当前榜单
-                                   #   incremental   → 强制增量模式
-    push: false                    # 是否发送推送通知
-    report_mode: "current"         # 报告模式:
-                                   #   daily       → 当日所有新闻的汇总
-                                   #   current     → 当前在榜的新闻
-                                   #   incremental → 只推送新增内容
-
-                                   
-    # frequency_file: "general.txt"
-                                   # 关键词文件（可选，位于 config/custom/keyword/）
-                                   # 不填则使用默认的 config/frequency_words.txt
-                                   # 时间段（period）中也可以设置此字段来覆盖默认值
-                                   # 例如晚间汇总用科技词库：
-                                   #   frequency_file: "tech.txt"
-                                   # 注意：仅在 filter_method 为 keyword 时生效
-                                   
-    # interests_file: "finance.txt"
-                                   # AI 兴趣描述文件（可选，位于 config/custom/ai/）
-                                   # 不填则使用默认的 config/ai_interests.txt
-                                   # 时间段（period）中也可以设置此字段来覆盖默认值
-                                   # 例如晚间汇总用金融兴趣：
-                                   #   interests_file: "finance.txt"
-                                   # 注意：仅在 filter_method 为 ai 时生效
-
-    # filter_method: "keyword"     # 筛选策略（可选: keyword | ai）
-                                   # 不填则使用全局 config.yaml 的 filter.method
-                                   # 时间段（period）中也可以设置此字段来覆盖
-                                   # 例如晚间汇总用 AI 筛选：
-                                   #   filter_method: "ai"
+    collect: true
+    analyze: false
+    ai_mode: "current"
+    push: false
+    report_mode: "current"
     once:
-      analyze: true                # 该时间段内只分析一次（省 API）
-      push: true                   # 该时间段内只推送一次（省打扰）
+      analyze: true
+      push: true
 
+  periods:
+    morning:
+      name: "早间推送"
+      start: "07:00"
+      end: "08:00"
+      push: true
+      report_mode: "daily"
+    noon:
+      name: "午间推送"
+      start: "12:00"
+      end: "13:00"
+      push: true
+      report_mode: "current"
+    evening:
+      name: "晚间推送"
+      start: "19:00"
+      end: "20:00"
+      push: true
+      report_mode: "daily"
+
+  day_plans:
+    all_day:
+      periods: ["morning", "noon", "evening"]
+
+  week_map:
+    1: "all_day"
+    2: "all_day"
+    3: "all_day"
+    4: "all_day"
+    5: "all_day"
+    6: "all_day"
+    7: "all_day"
+
+  overlap:
+    policy: "error_on_overlap"
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # 第 1 步：定义积木块（时间段）
